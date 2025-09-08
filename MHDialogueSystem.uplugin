@@ -1,0 +1,29 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.0.1",
+	"FriendlyName": "MetalHeart's Sample Dialogue System",
+	"Description": "Just a sample project for educational purposes",
+	"Category": "Editor",
+	"CreatedBy": "MetalHeart",
+	"CreatedByURL": "https://github.com/NovikovNick",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "MHDialog",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MHDialogEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
