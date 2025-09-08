@@ -36,10 +36,12 @@ public class MHDialogEditor : ModuleRules
             {
                 "MHDialog",
                 "Projects",
-				"ToolMenus",
+                "ToolMenus",
 				"CoreUObject",
-				"Slate",
+                "Slate",
 				"SlateCore",
+                "UnrealEd",
+                "AssetDefinition",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

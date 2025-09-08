@@ -13,11 +13,5 @@ class FMHDialogEditorModule : public IModuleInterface
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 	//~ End IModuleInterface interface
-  private:
-	TSharedPtr<class FUICommandList> PluginCommands;
-
-	void PluginButtonClicked();
-	void RegisterMenus();
 };
-
 }  // namespace MH::Dialog::Private
