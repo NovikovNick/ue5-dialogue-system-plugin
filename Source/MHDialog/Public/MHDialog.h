@@ -16,4 +16,12 @@ class MHDIALOG_API UMHDialog : public UObject
 
   public:
 	FText GetTopic() const { return Topic; }
+
+#if WITH_EDITORONLY_DATA
+
+	/** Graph for editor*/
+	UPROPERTY()
+	TObjectPtr<class UEdGraph> Graph;
+
+#endif
 };
