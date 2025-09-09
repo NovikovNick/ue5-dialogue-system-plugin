@@ -13,7 +13,7 @@ FMHDialogEditorCommands::FMHDialogEditorCommands()
 		  TEXT("MHDialogEditor"),									// Context name for fast lookup
 		  LOCTEXT("MHDialogEditor", "MetalHeart's Dialog Editor"),	// Localized context name for displaying
 		  NAME_None,												// Parent
-		  FMHDialogEditorStyle::GetStyleSetName()					// Icon Style Set
+		  FMHDialogEditorStyle::StyleSetName()						// Icon Style Set
 	  )
 {
 }

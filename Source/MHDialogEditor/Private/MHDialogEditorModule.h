@@ -6,7 +6,7 @@
 
 namespace MH::Dialog::Private
 {
-class FMHDialogEditorModule : public IModuleInterface
+class FMHDialogEditorModule final : public IModuleInterface
 {
   public:
 	//~ Begin IModuleInterface interface

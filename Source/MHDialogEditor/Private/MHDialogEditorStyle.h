@@ -6,23 +6,19 @@
 
 namespace MH::Dialog::Private
 {
-class FMHDialogEditorStyle
+class FMHDialogEditorStyle final : public FSlateStyleSet
 {
   public:
-	static void Initialize();
-
-	static void Shutdown();
-
-	static void ReloadTextures();
+	static const FName Undo;
+	static const FName Redo;
+	static const FName GraphTab;
 
 	static const ISlateStyle& Get();
-
-	static FName GetStyleSetName();
-
-  private:
-	static TSharedRef<class FSlateStyleSet> Create();
+	static const FName& StyleSetName();
+	static void ReloadTextures();
 
   private:
-	static TSharedPtr<class FSlateStyleSet> StyleInstance;
+	FMHDialogEditorStyle();
+	virtual ~FMHDialogEditorStyle() override;
 };
 }  // namespace MH::Dialog::Private

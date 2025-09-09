@@ -6,6 +6,7 @@
 #include "MHDialogEditorColors.h"
 #include "MHDialogEditorCommands.h"
 #include "MHDialogEditorLog.h"
+#include "MHDialogEditorStyle.h"
 #include "MHDialogEditorSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "MHDialogToolkit"
@@ -72,7 +73,7 @@ void FMHDialogToolkit::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabM
 	InTabManager->RegisterTabSpawner(GraphTabId, FOnSpawnTab::CreateSP(this, &FMHDialogToolkit::SpawnTab_Graph))
 		.SetDisplayName(LOCTEXT("Graph", "Graph"))
 		.SetGroup(AssetEditorTabsCategory.ToSharedRef())
-		.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Tabs.Viewports"));
+		.SetIcon(FSlateIcon(FMHDialogEditorStyle::StyleSetName(), FMHDialogEditorStyle::GraphTab));
 }
 
 void FMHDialogToolkit::UnregisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
