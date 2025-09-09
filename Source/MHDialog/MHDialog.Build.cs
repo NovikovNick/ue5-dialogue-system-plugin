@@ -35,16 +35,16 @@ public class MHDialog : ModuleRules
 			new string[]
 			{
 				"CoreUObject",
+				"Engine",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
+
+        DynamicallyLoadedModuleNames.AddRange(
 			new string[]
 			{
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-	}
+    }
 }

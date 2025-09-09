@@ -43,6 +43,7 @@ public class MHDialogEditor : ModuleRules
                 "UnrealEd",
                 "AssetDefinition",
                 "Engine",
+                "EditorSubsystem",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -6,6 +6,7 @@
 #include "MHDialogEditorColors.h"
 #include "MHDialogEditorCommands.h"
 #include "MHDialogEditorLog.h"
+#include "MHDialogEditorSubsystem.h"
 
 #define LOCTEXT_NAMESPACE "MHDialogToolkit"
 
@@ -13,6 +14,7 @@ namespace MH::Dialog::Private
 {
 const FName FMHDialogToolkit::AppIdentifier(TEXT("MHDialogAssetEditor"));
 const FName FMHDialogToolkit::DetailsTabId(TEXT("FMHDialogToolkit_Details"));
+const FName FMHDialogToolkit::GraphTabId(TEXT("FMHDialogToolkit_Graph"));
 
 FText FMHDialogToolkit::GetBaseToolkitName() const
 {
@@ -41,6 +43,8 @@ void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 	DialogAsset = Dialog;
 	check(IsValid(DialogAsset));
 
+	GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->InitAsset(DialogAsset);
+
 	CreateWidgets();
 	RegisterToolbar();
 	RegisterCommands();
@@ -64,12 +68,18 @@ void FMHDialogToolkit::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabM
 		.SetDisplayName(LOCTEXT("Details", "Details"))
 		.SetGroup(AssetEditorTabsCategory.ToSharedRef())
 		.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Tabs.Details"));
+
+	InTabManager->RegisterTabSpawner(GraphTabId, FOnSpawnTab::CreateSP(this, &FMHDialogToolkit::SpawnTab_Graph))
+		.SetDisplayName(LOCTEXT("Graph", "Graph"))
+		.SetGroup(AssetEditorTabsCategory.ToSharedRef())
+		.SetIcon(FSlateIcon(FAppStyle::GetAppStyleSetName(), "LevelEditor.Tabs.Viewports"));
 }
 
 void FMHDialogToolkit::UnregisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
 {
 	FAssetEditorToolkit::UnregisterTabSpawners(InTabManager);
 	InTabManager->UnregisterTabSpawner(DetailsTabId);
+	InTabManager->UnregisterTabSpawner(GraphTabId);
 }
 
 void FMHDialogToolkit::CreateWidgets()
@@ -108,16 +118,27 @@ void FMHDialogToolkit::RegisterCommands()
 TSharedRef<FTabManager::FLayout> FMHDialogToolkit::CreateLayout()
 {
 	// clang-format off
-	return FTabManager::NewLayout(TEXT("Standalone_FMHDialogToolkit_v1"))
+	return FTabManager::NewLayout(TEXT("Standalone_FMHDialogToolkit_v2"))
 		->AddArea
 		(
 			FTabManager::NewPrimaryArea()->SetOrientation(Orient_Vertical)
 			->Split
 			(
-				FTabManager::NewStack()
-				->SetSizeCoefficient(0.3f)
-				->AddTab(DetailsTabId, ETabState::OpenedTab)
-				->SetHideTabWell(true)
+				FTabManager::NewSplitter()->SetOrientation(Orient_Horizontal)
+				->Split
+				(
+					FTabManager::NewStack()
+					->SetSizeCoefficient(0.7f)
+					->AddTab(GraphTabId, ETabState::OpenedTab)
+					->SetHideTabWell(true)
+				)
+				->Split
+				(
+					FTabManager::NewStack()
+					->SetSizeCoefficient(0.3f)
+					->AddTab(DetailsTabId, ETabState::OpenedTab)
+					->SetHideTabWell(true)
+				)
 			)
 		);
 	// clang-format on
@@ -136,6 +157,22 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Details(const FSpawnTabArgs& Arg
 			[
 				DialogAssetDetailsView.ToSharedRef()
 			]
+		];
+	// clang-format on
+}
+
+TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Graph(const FSpawnTabArgs& Args)
+{
+	FGraphAppearanceInfo AppearanceInfo;
+	AppearanceInfo.CornerText = LOCTEXT("GraphCornerText", "DIALOGUE SYSTEM");
+
+	// clang-format off
+	return SNew(SDockTab)
+		.Label(LOCTEXT("GraphLabel", "Dialogue Graph"))
+		[
+			SNew(SGraphEditor)
+			.Appearance(AppearanceInfo)
+			.GraphToEdit(DialogAsset->Graph)
 		];
 	// clang-format on
 }

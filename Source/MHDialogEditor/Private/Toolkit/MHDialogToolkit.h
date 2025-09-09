@@ -32,6 +32,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit
   private:
 	static const FName AppIdentifier;
 	static const FName DetailsTabId;
+	static const FName GraphTabId;
 
 	TObjectPtr<UMHDialog> DialogAsset;
 
@@ -42,6 +43,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit
 	void RegisterCommands();
 	TSharedRef<FTabManager::FLayout> CreateLayout();
 	TSharedRef<SDockTab> SpawnTab_Details(const FSpawnTabArgs& Args);
+	TSharedRef<SDockTab> SpawnTab_Graph(const FSpawnTabArgs& Args);
 	TSharedRef<IDetailsView> CreateDetailsView();
 
 	void Undo();
