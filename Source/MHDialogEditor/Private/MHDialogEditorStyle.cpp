@@ -44,7 +44,8 @@ TSharedRef<FSlateStyleSet> FMHDialogEditorStyle::Create()
 
 	// reuse app style
 	Style->SetContentRoot(FPaths::EngineContentDir() / TEXT("Slate"));
-	Style->Set("MHDialogEditor.OpenPluginWindow", new IMAGE_BRUSH("Icons/icon_undo_16px", Icon16x16));
+	Style->Set("MHDialogEditor.Undo", new IMAGE_BRUSH("Icons/icon_undo_16px", Icon16x16));
+	Style->Set("MHDialogEditor.Redo", new IMAGE_BRUSH("Icons/icon_redo_16px", Icon16x16));
 
 	// plugin's own resources
 	// Style->SetContentRoot(IPluginManager::Get().FindPlugin("MHDialogEditor")->GetBaseDir() / TEXT("Resources"));

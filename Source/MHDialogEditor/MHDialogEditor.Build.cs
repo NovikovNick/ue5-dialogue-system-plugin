@@ -42,6 +42,7 @@ public class MHDialogEditor : ModuleRules
 				"SlateCore",
                 "UnrealEd",
                 "AssetDefinition",
+                "Engine",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

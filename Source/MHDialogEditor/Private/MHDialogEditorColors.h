@@ -9,5 +9,6 @@ namespace MH::Dialog::Private::Colors
 namespace Asset
 {
 const FLinearColor Default(FColor::Magenta);
+const FLinearColor WorldCentricTabColorScale(FColor::Red);
 }  // namespace Asset
 }  // namespace MH::Dialog::Private::Colors

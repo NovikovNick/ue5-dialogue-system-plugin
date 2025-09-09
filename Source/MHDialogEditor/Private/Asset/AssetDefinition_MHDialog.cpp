@@ -5,6 +5,7 @@
 #include "MHDialog.h"
 #include "MHDialogEditorColors.h"
 #include "MHDialogEditorLog.h"
+#include "Toolkit/MHDialogToolkit.h"
 
 #define LOCTEXT_NAMESPACE "UAssetDefinition_MHDialog"
 
@@ -32,7 +33,16 @@ TConstArrayView<FAssetCategoryPath> UAssetDefinition_MHDialog::GetAssetCategorie
 EAssetCommandResult UAssetDefinition_MHDialog::OpenAssets(const FAssetOpenArgs& OpenArgs) const
 {
 	EAssetCommandResult Result = EAssetCommandResult::Unhandled;
+	for (UMHDialog* Asset : OpenArgs.LoadObjects<UMHDialog>())
+	{
+		const double T0 = FPlatformTime::Seconds();
+		MakeShared<MH::Dialog::Private::FMHDialogToolkit>()->InitDialogEditor(OpenArgs.GetToolkitMode(), OpenArgs.ToolkitHost, Asset);
+		const double T1 = FPlatformTime::Seconds();
 
+		UE_LOG(LogMHDialogEditor, Display, TEXT("Dialog asset editor tooks %.1f seconds to open"), T1 - T0);
+
+		Result = EAssetCommandResult::Handled;
+	}
 	return Result;
 }
 #undef LOCTEXT_NAMESPACE

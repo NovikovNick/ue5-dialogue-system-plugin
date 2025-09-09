@@ -3,25 +3,20 @@
 #pragma once
 
 #include "Framework/Commands/Commands.h"
-#include "MHDialogEditorStyle.h"
 
 namespace MH::Dialog::Private
 {
 class FMHDialogEditorCommands : public TCommands<FMHDialogEditorCommands>
 {
   public:
-	FMHDialogEditorCommands()
-		: TCommands<FMHDialogEditorCommands>(TEXT("MHDialogEditor"),
-											 NSLOCTEXT("Contexts", "MHDialogEditor", "MHDialogEditor Plugin"),
-											 NAME_None,
-											 FMHDialogEditorStyle::GetStyleSetName())
-	{
-	}
+	FMHDialogEditorCommands();
 
-	// TCommands<> interface
+	//~ Begin TCommands<> interface
 	virtual void RegisterCommands() override;
+	//~ End TCommands<> interface
 
   public:
-	TSharedPtr<FUICommandInfo> OpenPluginWindow;
+	TSharedPtr<FUICommandInfo> Undo;
+	TSharedPtr<FUICommandInfo> Redo;
 };
 }  // namespace MH::Dialog::Private
