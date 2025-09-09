@@ -15,7 +15,7 @@ namespace MH::Dialog::Private
 {
 void FMHDialogEditorModule::StartupModule()
 {
-	FMHDialogEditorStyle::Initialize();
+	FMHDialogEditorStyle::Get();
 	FMHDialogEditorStyle::ReloadTextures();
 
 	FMHDialogEditorCommands::Register();
@@ -23,7 +23,6 @@ void FMHDialogEditorModule::StartupModule()
 
 void FMHDialogEditorModule::ShutdownModule()
 {
-	FMHDialogEditorStyle::Shutdown();
 	FMHDialogEditorCommands::Unregister();
 }
 

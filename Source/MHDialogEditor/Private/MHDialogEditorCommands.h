@@ -6,7 +6,7 @@
 
 namespace MH::Dialog::Private
 {
-class FMHDialogEditorCommands : public TCommands<FMHDialogEditorCommands>
+class FMHDialogEditorCommands final : public TCommands<FMHDialogEditorCommands>
 {
   public:
 	FMHDialogEditorCommands();

@@ -11,7 +11,7 @@
  *
  */
 UCLASS()
-class UMHDialogFactory : public UFactory
+class UMHDialogFactory final : public UFactory
 {
 	GENERATED_BODY()
 
