@@ -7,6 +7,7 @@
 class UMHDialog;
 class IDetailsView;
 class IToolkitHost;
+class SGraphEditor;
 
 namespace MH::Dialog::Private
 {
@@ -14,9 +15,12 @@ namespace MH::Dialog::Private
 /*
  * The toolkit is supposed to act only as the UI manager
  */
-class FMHDialogToolkit final : public FAssetEditorToolkit
+class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoClient
 {
   public:
+	FMHDialogToolkit();
+	virtual ~FMHDialogToolkit();
+
 	void InitDialogEditor(const EToolkitMode::Type Mode, const TSharedPtr<IToolkitHost>& InitToolkitHost, UMHDialog* Dialog);
 
 	//~ Begin FAssetEditorToolkit interface
@@ -29,6 +33,11 @@ class FMHDialogToolkit final : public FAssetEditorToolkit
 	virtual void UnregisterTabSpawners(const TSharedRef<FTabManager>& TabManager) override;
 	//~ End FAssetEditorToolkit interface
 
+	//~ Begin FEditorUndoClient Interface
+	virtual void PostUndo(bool bSuccess) override;
+	virtual void PostRedo(bool bSuccess) override;
+	// End of FEditorUndoClient
+
   private:
 	static const FName AppIdentifier;
 	static const FName DetailsTabId;
@@ -37,6 +46,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit
 	TObjectPtr<UMHDialog> DialogAsset;
 
 	TSharedPtr<IDetailsView> DialogAssetDetailsView;
+	TWeakPtr<SGraphEditor> UpdateGraphEdPtr;
 
 	void CreateWidgets();
 	void RegisterToolbar();

@@ -3,7 +3,7 @@
 #include "MHDialogEditorSubsystem.h"
 
 #include "EdGraph/EdGraph.h"
-#include "EdGraph/EdGraphSchema.h"
+#include "Graph/MHDialogGraphSchema.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "MHDialog.h"
 
@@ -14,7 +14,7 @@ void UMHDialogEditorSubsystem::InitAsset(UMHDialog* Asset) const
 		Asset->Graph = FBlueprintEditorUtils::CreateNewGraph(Asset,	 //
 															 NAME_None,
 															 UEdGraph::StaticClass(),
-															 UEdGraphSchema::StaticClass());
+															 UMHDialogGraphSchema::StaticClass());
 		Asset->Graph->GetSchema()->CreateDefaultNodesForGraph(*Asset->Graph);
 	}
 }
