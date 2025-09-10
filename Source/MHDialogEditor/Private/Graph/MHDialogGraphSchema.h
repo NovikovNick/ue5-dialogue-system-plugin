@@ -13,8 +13,13 @@ class UMHDialogGraphSchema final : public UEdGraphSchema
 	GENERATED_BODY()
 
   public:
+	// Allowable PinType.PinCategory values
+	static const FName PC_Default;
+
 	//~ Begin UEdGraphSchema interface
+	virtual void CreateDefaultNodesForGraph(UEdGraph& Graph) const override;
 	virtual void GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const override;
+	virtual const FPinConnectionResponse CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const override;
 	//~ End UEdGraphSchema interface
 };
 
