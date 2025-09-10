@@ -2,7 +2,19 @@
 
 #include "Graph/MHDialogGraphSchema.h"
 
+#include "Graph/MHDialogGraphNode.h"
+
 #define LOCTEXT_NAMESPACE "MHDialogGraphSchema"
+
+const FName UMHDialogGraphSchema::PC_Default(TEXT("DialogPin"));
+
+void UMHDialogGraphSchema::CreateDefaultNodesForGraph(UEdGraph& Graph) const
+{
+	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(Graph);
+	UMHDialogGraphNode* Node = NodeCreator.CreateNode(false);
+	Node->bRootNode			 = true;
+	NodeCreator.Finalize();
+}
 
 void UMHDialogGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
 {
@@ -15,18 +27,42 @@ void UMHDialogGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& Cont
 	}
 }
 
+const FPinConnectionResponse UMHDialogGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
+{
+	if (A == nullptr || B == nullptr)
+	{
+		return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, TEXT("Not nullptr for pins"));
+	}
+
+	if (A->Direction == B->Direction)
+	{
+		return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, TEXT("Only output pin can be connected to input pin"));
+	}
+
+	return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, TEXT(""));
+}
+
 UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* ParentGraph,
 																UEdGraphPin* FromPin,
 																const FVector2f& Location,
 																bool bSelectNewNode)
 {
-	FGraphNodeCreator<UEdGraphNode> NodeCreator(*ParentGraph);
+	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(*ParentGraph);
 	const FScopedTransaction Transaction(LOCTEXT("NewNode", "Dialog Editor: New Node"));
 	ParentGraph->Modify();
+	if (FromPin)
+	{
+		FromPin->Modify();
+	}
 
-	UEdGraphNode* Node = NodeCreator.CreateNode(/*bCreatedByUser*/ true);
+	UMHDialogGraphNode* Node = NodeCreator.CreateNode(/*bCreatedByUser*/ true);
 	Node->SetPosition(Location);
 	NodeCreator.Finalize();
+
+	if (FromPin)
+	{
+		Node->AutowireNewNode(FromPin);
+	}
 
 	return Node;
 }
