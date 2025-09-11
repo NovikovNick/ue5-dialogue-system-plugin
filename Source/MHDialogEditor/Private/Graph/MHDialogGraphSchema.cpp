@@ -2,8 +2,10 @@
 
 #include "Graph/MHDialogGraphSchema.h"
 
+#include "AIGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "Graph/MHDialogGraphNode.h"
+#include "GraphEditorActions.h"
 
 #define LOCTEXT_NAMESPACE "MHDialogGraphSchema"
 
@@ -45,6 +47,10 @@ void UMHDialogGraphSchema::GetContextMenuActions(UToolMenu* Menu, UGraphNodeCont
 		Section.AddMenuEntry(FGenericCommands::Get().Paste);
 		Section.AddMenuEntry(FGenericCommands::Get().Duplicate);
 	}
+	{  // Graph Editor actions
+		FToolMenuSection& Section = Menu->AddSection("Editor");
+		Section.AddMenuEntry(FGraphEditorCommands::Get().CreateComment);
+	}
 }
 
 const FPinConnectionResponse UMHDialogGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
@@ -60,6 +66,11 @@ const FPinConnectionResponse UMHDialogGraphSchema::CanCreateConnection(const UEd
 	}
 
 	return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, TEXT(""));
+}
+
+TSharedPtr<FEdGraphSchemaAction> UMHDialogGraphSchema::GetCreateCommentAction() const
+{
+	return TSharedPtr<FEdGraphSchemaAction>(static_cast<FEdGraphSchemaAction*>(new FAISchemaAction_AddComment));
 }
 
 UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* ParentGraph,
