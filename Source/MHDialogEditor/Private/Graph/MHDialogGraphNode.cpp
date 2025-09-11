@@ -90,6 +90,21 @@ UEdGraphPin* UMHDialogGraphNode::GetOutputPin(int32 InputIndex) const
 	return nullptr;
 }
 
+bool UMHDialogGraphNode::CanUserDeleteNode() const
+{
+	return bRootNode ? false : Super::CanUserDeleteNode();
+}
+
+bool UMHDialogGraphNode::CanDuplicateNode() const
+{
+	return bRootNode ? false : Super::CanDuplicateNode();
+}
+
+bool UMHDialogGraphNode::CanCreateUnderSpecifiedSchema(const UEdGraphSchema* DesiredSchema) const
+{
+	return IsValid(Cast<UMHDialogGraphSchema>(DesiredSchema));
+}
+
 void UMHDialogGraphNode::SetNodeTitle(FText Title)
 {
 	Data.Content = Title;

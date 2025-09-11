@@ -23,6 +23,9 @@ class UMHDialogGraphNode : public UEdGraphNode
 	virtual FLinearColor GetNodeTitleColor() const override;
 	virtual void AllocateDefaultPins() override;
 	virtual void AutowireNewNode(UEdGraphPin* FromPin) override;
+	virtual bool CanUserDeleteNode() const override;
+	virtual bool CanDuplicateNode() const override;
+	virtual bool CanCreateUnderSpecifiedSchema(const UEdGraphSchema* DesiredSchema) const override;
 	//~ End UEdGraphNode interface
 
 	UEdGraphPin* GetInputPin(int32 InputIndex = 0) const;
