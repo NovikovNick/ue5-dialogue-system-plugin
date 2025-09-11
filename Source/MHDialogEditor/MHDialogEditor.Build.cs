@@ -44,6 +44,7 @@ public class MHDialogEditor : ModuleRules
                 "AssetDefinition",
                 "Engine",
                 "EditorSubsystem",
+                "AIGraph",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
