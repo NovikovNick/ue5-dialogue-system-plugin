@@ -126,6 +126,8 @@ void FMHDialogToolkit::RegisterToolbar()
 
 void FMHDialogToolkit::RegisterCommands()
 {
+	FAIGraphEditor::CreateCommandList();
+
 	GetToolkitCommands()->MapAction(FMHDialogEditorCommands::Get().Undo, FExecuteAction::CreateSP(this, &FMHDialogToolkit::Undo));
 	GetToolkitCommands()->MapAction(FMHDialogEditorCommands::Get().Redo, FExecuteAction::CreateSP(this, &FMHDialogToolkit::Redo));
 }
@@ -195,6 +197,7 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Graph(const FSpawnTabArgs& Args)
 		.Label(LOCTEXT("GraphLabel", "Dialogue Graph"))
 		[
 			SAssignNew(UpdateGraphEdPtr, SGraphEditor)
+			.AdditionalCommands(GraphEditorCommands)
 			.Appearance(AppearanceInfo)
 			.GraphEvents(Events)
 			.GraphToEdit(DialogAsset->Graph)

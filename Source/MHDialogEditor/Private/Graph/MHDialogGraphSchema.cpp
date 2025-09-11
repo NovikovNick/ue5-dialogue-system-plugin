@@ -2,6 +2,7 @@
 
 #include "Graph/MHDialogGraphSchema.h"
 
+#include "Framework/Commands/GenericCommands.h"
 #include "Graph/MHDialogGraphNode.h"
 
 #define LOCTEXT_NAMESPACE "MHDialogGraphSchema"
@@ -25,6 +26,24 @@ void UMHDialogGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& Cont
 																	 LOCTEXT("NewNodeAction_Tooltip", "Adds a dialog node"),
 																	 /*InGrouping*/ 0);
 		ContextMenuBuilder.AddAction(Action);
+	}
+}
+
+void UMHDialogGraphSchema::GetContextMenuActions(UToolMenu* Menu, UGraphNodeContextMenuContext* Context) const
+{
+	if (!Context->Node)
+	{
+		return;
+	}
+
+	{  // General actions
+		FToolMenuSection& Section = Menu->AddSection(TEXT("NodeActions"));
+		Section.AddMenuEntry(FGenericCommands::Get().SelectAll);
+		Section.AddMenuEntry(FGenericCommands::Get().Delete);
+		Section.AddMenuEntry(FGenericCommands::Get().Copy);
+		Section.AddMenuEntry(FGenericCommands::Get().Cut);
+		Section.AddMenuEntry(FGenericCommands::Get().Paste);
+		Section.AddMenuEntry(FGenericCommands::Get().Duplicate);
 	}
 }
 
