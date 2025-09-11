@@ -39,24 +39,6 @@ FLinearColor FMHDialogToolkit::GetWorldCentricTabColorScale() const
 	return Colors::Asset::WorldCentricTabColorScale;
 }
 
-FMHDialogToolkit::FMHDialogToolkit()
-{
-	UEditorEngine* Editor = Cast<UEditorEngine>(GEngine);
-	if (IsValid(Editor))
-	{
-		Editor->RegisterForUndo(this);
-	}
-}
-
-FMHDialogToolkit::~FMHDialogToolkit()
-{
-	UEditorEngine* Editor = Cast<UEditorEngine>(GEngine);
-	if (IsValid(Editor))
-	{
-		Editor->RegisterForUndo(this);
-	}
-}
-
 void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 										const TSharedPtr<class IToolkitHost>& InitToolkitHost,
 										UMHDialog* Dialog)
@@ -109,34 +91,6 @@ void FMHDialogToolkit::UnregisterTabSpawners(const TSharedRef<FTabManager>& InTa
 	FAssetEditorToolkit::UnregisterTabSpawners(InTabManager);
 	InTabManager->UnregisterTabSpawner(DetailsTabId);
 	InTabManager->UnregisterTabSpawner(GraphTabId);
-}
-
-void FMHDialogToolkit::PostUndo(bool bSuccess)
-{
-	if (bSuccess)
-	{
-		// Clear selection, to avoid holding refs to nodes that go away
-		if (TSharedPtr<SGraphEditor> CurrentGraphEditor = UpdateGraphEdPtr.Pin())
-		{
-			CurrentGraphEditor->ClearSelectionSet();
-			CurrentGraphEditor->NotifyGraphChanged();
-		}
-		FSlateApplication::Get().DismissAllMenus();
-	}
-}
-
-void FMHDialogToolkit::PostRedo(bool bSuccess)
-{
-	if (bSuccess)
-	{
-		// Clear selection, to avoid holding refs to nodes that go away
-		if (TSharedPtr<SGraphEditor> CurrentGraphEditor = UpdateGraphEdPtr.Pin())
-		{
-			CurrentGraphEditor->ClearSelectionSet();
-			CurrentGraphEditor->NotifyGraphChanged();
-		}
-		FSlateApplication::Get().DismissAllMenus();
-	}
 }
 
 void FMHDialogToolkit::CreateWidgets()

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "AIGraphEditor.h"
 #include "Tools/BaseAssetToolkit.h"
 
 class UMHDialog;
@@ -15,12 +16,9 @@ namespace MH::Dialog::Private
 /*
  * The toolkit is supposed to act only as the UI manager
  */
-class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoClient
+class FMHDialogToolkit final : public FAssetEditorToolkit, public FAIGraphEditor
 {
   public:
-	FMHDialogToolkit();
-	virtual ~FMHDialogToolkit();
-
 	void InitDialogEditor(const EToolkitMode::Type Mode, const TSharedPtr<IToolkitHost>& InitToolkitHost, UMHDialog* Dialog);
 
 	//~ Begin FAssetEditorToolkit interface
@@ -34,11 +32,6 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoCli
 	virtual void UnregisterTabSpawners(const TSharedRef<FTabManager>& TabManager) override;
 	//~ End FAssetEditorToolkit interface
 
-	//~ Begin FEditorUndoClient Interface
-	virtual void PostUndo(bool bSuccess) override;
-	virtual void PostRedo(bool bSuccess) override;
-	// End of FEditorUndoClient
-
   private:
 	static const FName AppIdentifier;
 	static const FName DetailsTabId;
@@ -48,7 +41,6 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoCli
 
 	TSharedPtr<IDetailsView> DialogAssetDetailsView;
 	TSharedPtr<IDetailsView> DialogNodeDetailsView;
-	TWeakPtr<SGraphEditor> UpdateGraphEdPtr;
 
 	FDelegateHandle OnGraphUpdatedHandle;
 
