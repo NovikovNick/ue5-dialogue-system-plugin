@@ -7,7 +7,7 @@
 
 FText UMHDialogGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return bRootNode ? FText::FromString(TEXT("Root Node")) : FText::FromString(TEXT("Node"));
+	return Data.Content;
 }
 
 FLinearColor UMHDialogGraphNode::GetNodeTitleColor() const
@@ -25,9 +25,6 @@ void UMHDialogGraphNode::AllocateDefaultPins()
 
 	UEdGraphPin* InputPin			 = CreatePin(EEdGraphPinDirection::EGPD_Output, TEXT("Output"), NAME_None);
 	InputPin->PinType.PinSubCategory = UMHDialogGraphSchema::PC_Default;
-
-	GetGraph()->NotifyGraphChanged();
-	GetGraph()->Modify();
 }
 
 void UMHDialogGraphNode::AutowireNewNode(UEdGraphPin* FromPin)
@@ -91,4 +88,9 @@ UEdGraphPin* UMHDialogGraphNode::GetOutputPin(int32 InputIndex) const
 	}
 
 	return nullptr;
+}
+
+void UMHDialogGraphNode::SetNodeTitle(FText Title)
+{
+	Data.Content = Title;
 }

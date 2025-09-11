@@ -2,12 +2,14 @@
 
 #include "Toolkit/MHDialogToolkit.h"
 
+#include "Graph/MHDialogGraphNode.h"
 #include "MHDialog.h"
 #include "MHDialogEditorColors.h"
 #include "MHDialogEditorCommands.h"
 #include "MHDialogEditorLog.h"
 #include "MHDialogEditorStyle.h"
 #include "MHDialogEditorSubsystem.h"
+#include "MHDialogNode.h"
 
 #define LOCTEXT_NAMESPACE "MHDialogToolkit"
 
@@ -64,6 +66,9 @@ void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 
 	GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->InitAsset(DialogAsset);
 
+	auto Delegate		 = FOnGraphChanged::FDelegate::CreateSP(this, &FMHDialogToolkit::OnGraphUpdated);
+	OnGraphUpdatedHandle = DialogAsset->Graph->AddOnGraphChangedHandler(MoveTemp(Delegate));
+
 	CreateWidgets();
 	RegisterToolbar();
 	RegisterCommands();
@@ -76,6 +81,11 @@ void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 										 /* bCreateDefaultStandaloneMenu */ true,
 										 /* bCreateDefaultToolbar */ true,
 										 DialogAsset);
+}
+
+void FMHDialogToolkit::OnClose()
+{
+	DialogAsset->Graph->RemoveOnGraphChangedHandler(OnGraphUpdatedHandle);
 }
 
 void FMHDialogToolkit::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
@@ -133,6 +143,10 @@ void FMHDialogToolkit::CreateWidgets()
 {
 	DialogAssetDetailsView = CreateDetailsView();
 	DialogAssetDetailsView->SetObject(DialogAsset);
+
+	DialogNodeDetailsView = CreateDetailsView();
+	DialogNodeDetailsView->OnFinishedChangingProperties().AddSP(this, &FMHDialogToolkit::OnFinishedChangingDetails);
+	DialogNodeDetailsView->SetObject(nullptr);
 }
 
 void FMHDialogToolkit::RegisterToolbar()
@@ -204,6 +218,12 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Details(const FSpawnTabArgs& Arg
 			[
 				DialogAssetDetailsView.ToSharedRef()
 			]
+			+SVerticalBox::Slot()
+			.Padding(0, 8, 0, 0)
+			.AutoHeight()
+			[
+				DialogNodeDetailsView.ToSharedRef()
+			]
 		];
 	// clang-format on
 }
@@ -213,12 +233,16 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Graph(const FSpawnTabArgs& Args)
 	FGraphAppearanceInfo AppearanceInfo;
 	AppearanceInfo.CornerText = LOCTEXT("GraphCornerText", "DIALOGUE SYSTEM");
 
+	SGraphEditor::FGraphEditorEvents Events;
+	Events.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FMHDialogToolkit::OnSelectedNodesChanged);
+
 	// clang-format off
 	return SNew(SDockTab)
 		.Label(LOCTEXT("GraphLabel", "Dialogue Graph"))
 		[
 			SAssignNew(UpdateGraphEdPtr, SGraphEditor)
 			.Appearance(AppearanceInfo)
+			.GraphEvents(Events)
 			.GraphToEdit(DialogAsset->Graph)
 		];
 	// clang-format on
@@ -248,5 +272,29 @@ void FMHDialogToolkit::Redo()
 		Editor->RedoTransaction();
 	}
 }
+
+void FMHDialogToolkit::OnSelectedNodesChanged(const FGraphPanelSelectionSet& NewSelection)
+{
+	DialogNodeDetailsView->SetObject(nullptr);
+	for (UObject* Object : NewSelection)
+	{
+		if (UMHDialogGraphNode* GraphNode = Cast<UMHDialogGraphNode>(Object))
+		{
+			DialogNodeDetailsView->SetObject(GraphNode);
+			return;
+		}
+	}
+}
+
+void FMHDialogToolkit::OnGraphUpdated(const FEdGraphEditAction&)
+{
+	GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->UpdateAsset(DialogAsset);
+}
+
+void FMHDialogToolkit::OnFinishedChangingDetails(const FPropertyChangedEvent& Event)
+{
+	DialogAsset->Graph->NotifyGraphChanged();
+}
+
 }  // namespace MH::Dialog::Private
 #undef LOCTEXT_NAMESPACE

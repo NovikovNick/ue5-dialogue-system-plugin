@@ -12,7 +12,8 @@ void UMHDialogGraphSchema::CreateDefaultNodesForGraph(UEdGraph& Graph) const
 {
 	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(Graph);
 	UMHDialogGraphNode* Node = NodeCreator.CreateNode(false);
-	Node->bRootNode			 = true;
+	Node->MarkAsRoot();
+	Node->SetNodeTitle(LOCTEXT("RootNodeTitle", "How're you doing?"));
 	NodeCreator.Finalize();
 }
 
@@ -50,18 +51,17 @@ UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* Parent
 	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(*ParentGraph);
 	const FScopedTransaction Transaction(LOCTEXT("NewNode", "Dialog Editor: New Node"));
 	ParentGraph->Modify();
-	if (FromPin)
-	{
-		FromPin->Modify();
-	}
 
 	UMHDialogGraphNode* Node = NodeCreator.CreateNode(/*bCreatedByUser*/ true);
 	Node->SetPosition(Location);
+	Node->SetNodeTitle(LOCTEXT("NewNodeTitle", "Fine"));
 	NodeCreator.Finalize();
 
 	if (FromPin)
 	{
+		FromPin->Modify();
 		Node->AutowireNewNode(FromPin);
+		ParentGraph->NotifyGraphChanged();
 	}
 
 	return Node;
