@@ -20,4 +20,5 @@ class UMHDialogEditorSubsystem final : public UEditorSubsystem
 
   public:
 	void InitAsset(UMHDialog* Asset) const;
+	void UpdateAsset(UMHDialog* Asset) const;
 };

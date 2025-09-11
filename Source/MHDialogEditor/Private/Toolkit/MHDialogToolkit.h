@@ -29,6 +29,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoCli
 	virtual FString GetWorldCentricTabPrefix() const override;
 	virtual FLinearColor GetWorldCentricTabColorScale() const override;
 
+	virtual void OnClose() override;
 	virtual void RegisterTabSpawners(const TSharedRef<FTabManager>& TabManager) override;
 	virtual void UnregisterTabSpawners(const TSharedRef<FTabManager>& TabManager) override;
 	//~ End FAssetEditorToolkit interface
@@ -46,7 +47,10 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoCli
 	TObjectPtr<UMHDialog> DialogAsset;
 
 	TSharedPtr<IDetailsView> DialogAssetDetailsView;
+	TSharedPtr<IDetailsView> DialogNodeDetailsView;
 	TWeakPtr<SGraphEditor> UpdateGraphEdPtr;
+
+	FDelegateHandle OnGraphUpdatedHandle;
 
 	void CreateWidgets();
 	void RegisterToolbar();
@@ -58,6 +62,9 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FEditorUndoCli
 
 	void Undo();
 	void Redo();
+	void OnSelectedNodesChanged(const FGraphPanelSelectionSet& NewSelection);
+	void OnFinishedChangingDetails(const FPropertyChangedEvent& Event);
+	void OnGraphUpdated(const FEdGraphEditAction& Action);
 };
 
 }  // namespace MH::Dialog::Private

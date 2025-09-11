@@ -4,13 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "EdGraph/EdGraphNode.h"
+#include "MHDialogNodeData.h"
 
 #include "MHDialogGraphNode.generated.h"
+
+class UMHDialogEditorSubsystem;
 
 UCLASS()
 class UMHDialogGraphNode : public UEdGraphNode
 {
 	GENERATED_BODY()
+
+	friend UMHDialogEditorSubsystem;
 
 	//~ Begin UEdGraphNode interface
   public:
@@ -20,11 +25,16 @@ class UMHDialogGraphNode : public UEdGraphNode
 	virtual void AutowireNewNode(UEdGraphPin* FromPin) override;
 	//~ End UEdGraphNode interface
 
-  private:
 	UEdGraphPin* GetInputPin(int32 InputIndex = 0) const;
 	UEdGraphPin* GetOutputPin(int32 InputIndex = 0) const;
 
-  public:
+	void MarkAsRoot() { bRootNode = true; }
+	void SetNodeTitle(FText Title);
+
+  private:
 	UPROPERTY()
 	bool bRootNode = false;
+
+	UPROPERTY(EditAnywhere)
+	FMHDialogNodeData Data;
 };
