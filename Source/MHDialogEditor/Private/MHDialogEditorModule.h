@@ -6,6 +6,10 @@
 
 namespace MH::Dialog::Private
 {
+
+struct FMHDialogGraphNodeFactory;
+struct FMHDialogGraphPinFactory;
+
 class FMHDialogEditorModule final : public IModuleInterface
 {
   public:
@@ -13,5 +17,8 @@ class FMHDialogEditorModule final : public IModuleInterface
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 	//~ End IModuleInterface interface
+  private:
+	TSharedPtr<FMHDialogGraphPinFactory> GraphPinFactory;
+	TSharedPtr<FMHDialogGraphNodeFactory> GraphNodeFactory;
 };
 }  // namespace MH::Dialog::Private

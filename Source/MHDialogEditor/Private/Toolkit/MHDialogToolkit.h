@@ -57,6 +57,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FAIGraphEditor
 	void OnSelectedNodesChanged(const FGraphPanelSelectionSet& NewSelection);
 	void OnFinishedChangingDetails(const FPropertyChangedEvent& Event);
 	void OnGraphUpdated(const FEdGraphEditAction& Action);
+	void OnNodeTextCommited(const FText&, ETextCommit::Type, UEdGraphNode*);
 };
 
 }  // namespace MH::Dialog::Private

@@ -3,6 +3,7 @@
 #include "MHDialogEditorModule.h"
 
 #include "Customization/MHDialogNodeDataCustomization.h"
+#include "Graph/MHDialogGraphFactory.h"
 #include "MHDialog.h"
 #include "MHDialogEditorCommands.h"
 #include "MHDialogEditorLog.h"
@@ -27,6 +28,12 @@ void FMHDialogEditorModule::StartupModule()
 		PropertyModule.RegisterCustomPropertyTypeLayout(FMHDialogNodeData::StaticStruct()->GetFName(), FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FMHDialogNodeDataCustomization::MakeInstance));
 		PropertyModule.NotifyCustomizationModuleChanged();
 	}  // clang-format on
+
+	GraphPinFactory = MakeShared<FMHDialogGraphPinFactory>();
+	FEdGraphUtilities::RegisterVisualPinFactory(GraphPinFactory);
+
+	GraphNodeFactory = MakeShared<FMHDialogGraphNodeFactory>();
+	FEdGraphUtilities::RegisterVisualNodeFactory(GraphNodeFactory);
 }
 
 void FMHDialogEditorModule::ShutdownModule()
@@ -39,6 +46,9 @@ void FMHDialogEditorModule::ShutdownModule()
 		PropertyModule.UnregisterCustomPropertyTypeLayout(FMHDialogNodeData::StaticStruct()->GetFName());
 		PropertyModule.NotifyCustomizationModuleChanged();
 	}
+
+	FEdGraphUtilities::UnregisterVisualPinFactory(GraphPinFactory);
+	FEdGraphUtilities::UnregisterVisualNodeFactory(GraphNodeFactory);
 }
 
 IMPLEMENT_MODULE(FMHDialogEditorModule, MHDialogEditor)

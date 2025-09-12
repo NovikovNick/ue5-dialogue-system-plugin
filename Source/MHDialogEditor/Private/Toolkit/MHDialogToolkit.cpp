@@ -191,6 +191,7 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Graph(const FSpawnTabArgs& Args)
 
 	SGraphEditor::FGraphEditorEvents Events;
 	Events.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FMHDialogToolkit::OnSelectedNodesChanged);
+	Events.OnTextCommitted	  = FOnNodeTextCommitted::CreateSP(this, &FMHDialogToolkit::OnNodeTextCommited);
 
 	// clang-format off
 	return SNew(SDockTab)
@@ -251,6 +252,19 @@ void FMHDialogToolkit::OnGraphUpdated(const FEdGraphEditAction&)
 void FMHDialogToolkit::OnFinishedChangingDetails(const FPropertyChangedEvent& Event)
 {
 	DialogAsset->Graph->NotifyGraphChanged();
+}
+
+void FMHDialogToolkit::OnNodeTextCommited(const FText& Text, ETextCommit::Type Type, UEdGraphNode* Node)
+{
+	if (UMHDialogGraphNode* GraphNode = Cast<UMHDialogGraphNode>(Node))
+	{
+		{
+			const FScopedTransaction Transaction(LOCTEXT("RenameNode", "Rename Dialogue Node"));
+			GraphNode->Modify();
+			GraphNode->SetNodeTitle(Text);
+		}
+		GraphNode->GetGraph()->NotifyGraphChanged();
+	}
 }
 
 }  // namespace MH::Dialog::Private
