@@ -2,6 +2,7 @@
 
 #include "Graph/MHDialogGraphSchema.h"
 
+#include "AIGraphConnectionDrawingPolicy.h"
 #include "AIGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "Graph/MHDialogGraphNode.h"
@@ -71,6 +72,21 @@ const FPinConnectionResponse UMHDialogGraphSchema::CanCreateConnection(const UEd
 TSharedPtr<FEdGraphSchemaAction> UMHDialogGraphSchema::GetCreateCommentAction() const
 {
 	return TSharedPtr<FEdGraphSchemaAction>(static_cast<FEdGraphSchemaAction*>(new FAISchemaAction_AddComment));
+}
+
+FConnectionDrawingPolicy* UMHDialogGraphSchema::CreateConnectionDrawingPolicy(int32 InBackLayerID,
+																			  int32 InFrontLayerID,
+																			  float InZoomFactor,
+																			  const FSlateRect& InClippingRect,
+																			  class FSlateWindowElementList& InDrawElements,
+																			  class UEdGraph* InGraphObj) const
+{
+	return new FAIGraphConnectionDrawingPolicy(InBackLayerID,  //
+											   InFrontLayerID,
+											   InZoomFactor,
+											   InClippingRect,
+											   InDrawElements,
+											   InGraphObj);
 }
 
 UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* ParentGraph,
