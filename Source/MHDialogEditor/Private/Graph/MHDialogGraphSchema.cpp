@@ -5,6 +5,7 @@
 #include "AIGraphConnectionDrawingPolicy.h"
 #include "AIGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
+#include "Graph/MHDialogGraph.h"
 #include "Graph/MHDialogGraphNode.h"
 #include "GraphEditorActions.h"
 
@@ -94,9 +95,12 @@ UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* Parent
 																const FVector2f& Location,
 																bool bSelectNewNode)
 {
-	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(*ParentGraph);
+	UMHDialogGraph* DialogGraph = CastChecked<UMHDialogGraph>(ParentGraph);
+	DialogGraph->LockUpdates();
+
+	FGraphNodeCreator<UMHDialogGraphNode> NodeCreator(*DialogGraph);
 	const FScopedTransaction Transaction(LOCTEXT("NewNode", "Dialog Editor: New Node"));
-	ParentGraph->Modify();
+	DialogGraph->Modify();
 
 	UMHDialogGraphNode* Node = NodeCreator.CreateNode(/*bCreatedByUser*/ true);
 	Node->SetPosition(Location);
@@ -107,9 +111,10 @@ UEdGraphNode* FMHDialogGraphSchemaAction_NewNode::PerformAction(UEdGraph* Parent
 	{
 		FromPin->Modify();
 		Node->AutowireNewNode(FromPin);
-		ParentGraph->NotifyGraphChanged();
+		DialogGraph->NotifyGraphChanged();
 	}
 
+	DialogGraph->UnlockUpdates();
 	return Node;
 }
 
