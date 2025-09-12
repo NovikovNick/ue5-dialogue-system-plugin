@@ -9,6 +9,7 @@ class UMHDialog;
 class IDetailsView;
 class IToolkitHost;
 class SGraphEditor;
+class UMHDialogGraph;
 
 namespace MH::Dialog::Private
 {
@@ -38,6 +39,7 @@ class FMHDialogToolkit final : public FAssetEditorToolkit, public FAIGraphEditor
 	static const FName GraphTabId;
 
 	TObjectPtr<UMHDialog> DialogAsset;
+	TObjectPtr<UMHDialogGraph> DialogGraph;
 
 	TSharedPtr<IDetailsView> DialogAssetDetailsView;
 	TSharedPtr<IDetailsView> DialogNodeDetailsView;

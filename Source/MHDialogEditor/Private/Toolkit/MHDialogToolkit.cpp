@@ -2,6 +2,7 @@
 
 #include "Toolkit/MHDialogToolkit.h"
 
+#include "Graph/MHDialogGraph.h"
 #include "Graph/MHDialogGraphNode.h"
 #include "MHDialog.h"
 #include "MHDialogEditorColors.h"
@@ -43,13 +44,14 @@ void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 										const TSharedPtr<class IToolkitHost>& InitToolkitHost,
 										UMHDialog* Dialog)
 {
+	check(IsValid(Dialog));
 	DialogAsset = Dialog;
-	check(IsValid(DialogAsset));
 
 	GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->InitAsset(DialogAsset);
+	DialogGraph			 = CastChecked<UMHDialogGraph>(DialogAsset->Graph);
 
 	auto Delegate		 = FOnGraphChanged::FDelegate::CreateSP(this, &FMHDialogToolkit::OnGraphUpdated);
-	OnGraphUpdatedHandle = DialogAsset->Graph->AddOnGraphChangedHandler(MoveTemp(Delegate));
+	OnGraphUpdatedHandle = DialogGraph->AddOnGraphChangedHandler(MoveTemp(Delegate));
 
 	CreateWidgets();
 	RegisterToolbar();
@@ -67,7 +69,7 @@ void FMHDialogToolkit::InitDialogEditor(const EToolkitMode::Type Mode,
 
 void FMHDialogToolkit::OnClose()
 {
-	DialogAsset->Graph->RemoveOnGraphChangedHandler(OnGraphUpdatedHandle);
+	DialogGraph->RemoveOnGraphChangedHandler(OnGraphUpdatedHandle);
 }
 
 void FMHDialogToolkit::RegisterTabSpawners(const TSharedRef<FTabManager>& InTabManager)
@@ -201,7 +203,7 @@ TSharedRef<SDockTab> FMHDialogToolkit::SpawnTab_Graph(const FSpawnTabArgs& Args)
 			.AdditionalCommands(GraphEditorCommands)
 			.Appearance(AppearanceInfo)
 			.GraphEvents(Events)
-			.GraphToEdit(DialogAsset->Graph)
+			.GraphToEdit(DialogGraph)
 		];
 	// clang-format on
 }
@@ -246,12 +248,15 @@ void FMHDialogToolkit::OnSelectedNodesChanged(const FGraphPanelSelectionSet& New
 
 void FMHDialogToolkit::OnGraphUpdated(const FEdGraphEditAction&)
 {
-	GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->UpdateAsset(DialogAsset);
+	if (!DialogGraph->IsLocked())
+	{
+		GEditor->GetEditorSubsystem<UMHDialogEditorSubsystem>()->UpdateAsset(DialogAsset);
+	}
 }
 
 void FMHDialogToolkit::OnFinishedChangingDetails(const FPropertyChangedEvent& Event)
 {
-	DialogAsset->Graph->NotifyGraphChanged();
+	DialogGraph->NotifyGraphChanged();
 }
 
 void FMHDialogToolkit::OnNodeTextCommited(const FText& Text, ETextCommit::Type Type, UEdGraphNode* Node)
