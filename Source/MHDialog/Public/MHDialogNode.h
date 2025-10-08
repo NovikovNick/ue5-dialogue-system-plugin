@@ -19,6 +19,10 @@ class UMHDialogNode : public UObject
 	UPROPERTY(BlueprintReadOnly)
 	FMHDialogNodeData Data;
 
+  public:
+	const FMHDialogNodeData& GetData() const { return Data; }
+	const TArray<TObjectPtr<UMHDialogNode>>& GetChildNodes() const { return ChildNodes; }
+
 #if WITH_EDITORONLY_DATA
 
 	friend class UMHDialogEditorSubsystem;

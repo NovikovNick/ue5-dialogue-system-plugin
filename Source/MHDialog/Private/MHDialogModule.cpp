@@ -2,6 +2,10 @@
 
 #include "MHDialogModule.h"
 
+#include "MHDialogLog.h"
+
+DEFINE_LOG_CATEGORY(LogMHDialog)
+
 #define LOCTEXT_NAMESPACE "FMHDialogModule"
 
 namespace MH::Dialog

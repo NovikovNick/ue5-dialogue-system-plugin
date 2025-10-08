@@ -23,6 +23,8 @@ class MHDIALOG_API UMHDialog : public UObject
   public:
 	FText GetTopic() const { return Topic; }
 
+	UMHDialogNode* GetRoot() const { return Root; }
+
 #if WITH_EDITORONLY_DATA
 
 	friend class UMHDialogEditorSubsystem;

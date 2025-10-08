@@ -35,7 +35,8 @@ public class MHDialog : ModuleRules
 			new string[]
 			{
 				"CoreUObject",
-				"Engine",
+                "Engine",
+                "UMG",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
