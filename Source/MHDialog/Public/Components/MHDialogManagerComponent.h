@@ -41,6 +41,9 @@ class MHDIALOG_API UMHDialogManagerComponent : public UActorComponent
 	bool bDebug = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
+	FVector PositionOffset = FVector{0.0, 0.0, 50.0};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
 	float TriggerVolumeRadius = 300.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)

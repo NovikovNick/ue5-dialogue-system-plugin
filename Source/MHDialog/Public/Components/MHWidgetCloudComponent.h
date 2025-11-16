@@ -17,16 +17,16 @@ struct FMHWidgetCloudComponentConfig
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	float Radius = 100.0f;
+	float Radius = 70.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	float RotationSpeed = 700.0f;
+	float RotationSpeed = 600.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
 	float RotationMaxDelta = 2.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	float WidgetScale = 0.8f;
+	float WidgetScale = 0.4f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
 	FRuntimeFloatCurve PopUpAnimationCurve;

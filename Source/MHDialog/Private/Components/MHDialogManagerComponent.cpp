@@ -37,8 +37,10 @@ void UMHDialogManagerComponent::BeginPlay()
 		TriggerVolume->InitSphereRadius(TriggerVolumeRadius);
 		TriggerVolume->SetHiddenInGame(!bDebug);
 		TriggerVolume->SetGenerateOverlapEvents(true);
-		TriggerVolume->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		TriggerVolume->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+		// TriggerVolume->SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
+		TriggerVolume->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		//  TriggerVolume->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
 		TriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &UMHDialogManagerComponent::OnDialogTriggerEnter);
 		TriggerVolume->OnComponentEndOverlap.AddDynamic(this, &UMHDialogManagerComponent::OnDialogTriggerExit);
 
@@ -61,7 +63,7 @@ void UMHDialogManagerComponent::BeginPlay()
 
 		OverheadWidgetComponent->RegisterComponent();
 		OverheadWidgetComponent->AttachToComponent(TriggerVolume, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		OverheadWidgetComponent->SetRelativeLocation(FVector::ZeroVector);
+		OverheadWidgetComponent->SetRelativeLocation(PositionOffset);
 	}
 
 	{
@@ -73,7 +75,7 @@ void UMHDialogManagerComponent::BeginPlay()
 
 		WidgetCloudComponent->RegisterComponent();
 		WidgetCloudComponent->AttachToComponent(TriggerVolume, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		WidgetCloudComponent->SetRelativeLocation(FVector::ZeroVector);
+		WidgetCloudComponent->SetRelativeLocation(PositionOffset);
 	}
 
 	LocalPlayer = UGameplayStatics::GetPlayerCharacter(World, 0);

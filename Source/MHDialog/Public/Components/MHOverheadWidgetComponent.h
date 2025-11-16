@@ -17,13 +17,13 @@ struct FMHOverheadWidgetComponentConfig
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	float Distance = 100.0f;
+	float Distance = 25.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	FVector Direction = FVector::UpVector;
+	FVector Direction = FVector::ForwardVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
-	float WidgetScale = 0.8f;
+	float WidgetScale = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog)
 	FRuntimeFloatCurve PopUpAnimationCurve;
